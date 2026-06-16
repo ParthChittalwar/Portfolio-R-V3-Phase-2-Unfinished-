@@ -312,3 +312,5 @@ Add these to `.env` (or your deployment platform's env settings):
 | `TechSphere.js` (lazy entry) | ~1.3KB | Desktop, no reduced motion only |
 
 Mobile initial load: ~168KB gzip (main + vendor + ui-libs chunks only).
+#   P o r t f o l i o - R - V 3 - P h a s e - 2 - U n f i n i s h e d -  
+ 
