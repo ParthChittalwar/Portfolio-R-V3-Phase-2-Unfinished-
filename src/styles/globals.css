@@ -1,0 +1,189 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Design tokens.
+
+  Dark mode is the default and lives on `:root`. Adding a `.light`
+  class to <html> (see src/hooks/useTheme.ts) overrides the same
+  variable names with light-mode values — components never need to
+  know which theme is active, they just use the Tailwind color
+  utilities (bg-background, text-foreground, border-border, etc.)
+  defined in tailwind.config.ts.
+*/
+:root {
+  --radius: 0.75rem;
+
+  /* Brand palette — premium dark (default) */
+  --color-background: oklch(0.145 0 0); /* #0A0A0A */
+  --color-surface: oklch(0.175 0 0); /* #111111 */
+  --color-elevated: oklch(0.21 0 0); /* #171717 */
+  --color-foreground: oklch(1 0 0); /* #FFFFFF */
+  --color-muted-foreground: oklch(0.72 0.005 270); /* #A1A1AA */
+  --color-accent: oklch(0.87 0.003 270); /* #D4D4D8 */
+  --color-accent-foreground: oklch(0.145 0 0);
+  --color-border: oklch(1 0 0 / 8%);
+  --color-ring: oklch(1 0 0 / 30%);
+
+  --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* Themed helper values used by the utilities below */
+  --grain-dot: rgba(255, 255, 255, 0.06);
+  --hero-glow-color: rgba(255, 255, 255, 0.08);
+  --card-hover-bg: oklch(0.23 0 0);
+  --card-hover-border: rgba(255, 255, 255, 0.18);
+  --divider-color: rgba(255, 255, 255, 0.12);
+  --selection-bg: rgba(255, 255, 255, 0.15);
+  --selection-fg: #ffffff;
+  --hero-gradient-start: #ffffff;
+  --hero-gradient-end: #6b6b70;
+}
+
+/* Light mode overrides */
+.light {
+  --color-background: oklch(0.99 0 0); /* near-white */
+  --color-surface: oklch(0.97 0 0);
+  --color-elevated: oklch(0.94 0 0);
+  --color-foreground: oklch(0.145 0 0); /* near-black */
+  --color-muted-foreground: oklch(0.45 0.01 270);
+  --color-accent: oklch(0.21 0 0);
+  --color-accent-foreground: oklch(1 0 0);
+  --color-border: oklch(0 0 0 / 8%);
+  --color-ring: oklch(0 0 0 / 25%);
+
+  --grain-dot: rgba(0, 0, 0, 0.045);
+  --hero-glow-color: rgba(0, 0, 0, 0.05);
+  --card-hover-bg: oklch(0.91 0 0);
+  --card-hover-border: rgba(0, 0, 0, 0.14);
+  --divider-color: rgba(0, 0, 0, 0.1);
+  --selection-bg: rgba(0, 0, 0, 0.1);
+  --selection-fg: #0a0a0a;
+  --hero-gradient-start: #0a0a0a;
+  --hero-gradient-end: #9a9aa3;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Applied to <html> by CustomCursor on capable desktop browsers */
+  html.custom-cursor,
+  html.custom-cursor * {
+    cursor: none;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+  }
+
+  ::selection {
+    background: var(--selection-bg);
+    color: var(--selection-fg);
+  }
+
+  /* Accessible focus states everywhere */
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle at 1px 1px, var(--grain-dot) 1px, transparent 0);
+    background-size: 4px 4px;
+    opacity: 0.4;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+  }
+
+  .hero-glow {
+    background: radial-gradient(
+      ellipse 60% 50% at 50% 40%,
+      var(--hero-glow-color),
+      transparent 70%
+    );
+  }
+
+  .card-hover {
+    transition:
+      transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.4s ease,
+      background-color 0.4s ease;
+  }
+  .card-hover:hover {
+    transform: translateY(-4px);
+    border-color: var(--card-hover-border);
+    background-color: var(--card-hover-bg);
+  }
+
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--divider-color), transparent);
+  }
+
+  .hero-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    line-height: 0.85;
+    background: linear-gradient(
+      180deg,
+      var(--hero-gradient-start) 0%,
+      var(--hero-gradient-start) 40%,
+      var(--hero-gradient-end) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Hide scrollbar for horizontally-scrolling rails (kept accessible via keyboard) */
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
